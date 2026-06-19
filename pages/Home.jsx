@@ -9,6 +9,7 @@ function Home() {
   const [listings, setListings] = useState([])
   const [currentUserId, setCurrentUserId] = useState(null)
   const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
@@ -20,6 +21,11 @@ function Home() {
     fetchListings()
     loadUser()
   }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300)
+    return () => clearTimeout(timer)
+  }, [search])
 
   const loadUser = async () => {
     const {
@@ -50,7 +56,7 @@ function Home() {
   }
 
   const filteredListings = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase()
+    const normalizedSearch = debouncedSearch.trim().toLowerCase()
     const min = minPrice === '' ? null : Number(minPrice)
     const max = maxPrice === '' ? null : Number(maxPrice)
 
@@ -89,7 +95,7 @@ function Home() {
 
         return (second.id || 0) - (first.id || 0)
       })
-  }, [listings, maxPrice, minPrice, search, selectedCategory, sortBy])
+  }, [listings, maxPrice, minPrice, debouncedSearch, selectedCategory, sortBy])
 
   const resetFilters = () => {
     setSearch('')
