@@ -1,0 +1,17 @@
+export const categories = [
+  'Nəqliyyat',
+  'Telefonlar',
+  'Ev və bağ üçün',
+  'Elektronika',
+  'Daşınmaz əmlak',
+  'Ehtiyat hissələri və aksesuarlar',
+  'Xidmətlər və biznes',
+  'Şəxsi əşyalar',
+  'Məişət texnikası',
+  'Uşaq aləmi',
+  'Heyvanlar',
+  'İş elanları',
+  'Məktəblilər üçün',
+  'Mağazalar',
+  'Hobbi və asudə',
+]
