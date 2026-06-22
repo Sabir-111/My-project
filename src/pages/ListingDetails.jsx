@@ -1,8 +1,22 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Eye, MapPin, MessageCircle, Phone, Send, User } from 'lucide-react'
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+  Share2,
+  User,
+} from 'lucide-react'
+import ListingCard from '../components/ListingCard'
+import { categoryToSlug } from '../constants/categories'
 import { supabase } from '../services/supabase'
 import { formatDateTime, formatPrice } from '../utils/format'
+import { addRecentlyViewed } from '../utils/recentlyViewed'
 
 function ListingDetails() {
   const { id } = useParams()
@@ -13,11 +27,16 @@ function ListingDetails() {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
   const [currentUserId, setCurrentUserId] = useState(null)
+  const [similarListings, setSimilarListings] = useState([])
+  const [showPhone, setShowPhone] = useState(false)
+  const [copied, setCopied] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     loadPage()
+    setShowPhone(false)
+    setCopied(false)
   }, [id])
 
   const galleryImages = useMemo(() => {
@@ -67,6 +86,9 @@ function ListingDetails() {
       views: nextViews,
     })
 
+    addRecentlyViewed({ ...data, views: nextViews })
+    loadSimilar(data)
+
     const { data: imageData } = await supabase
       .from('listing_images')
       .select('*')
@@ -75,6 +97,51 @@ function ListingDetails() {
 
     setImages(imageData || [])
     setCurrentImage(0)
+  }
+
+  const loadSimilar = async (current) => {
+    if (!current?.category) {
+      setSimilarListings([])
+      return
+    }
+
+    const { data } = await supabase
+      .from('listings')
+      .select('*')
+      .eq('category', current.category)
+      .neq('id', current.id)
+      .order('id', { ascending: false })
+      .limit(4)
+
+    setSimilarListings(data || [])
+  }
+
+  const showPrevImage = () =>
+    setCurrentImage((index) => (index - 1 + galleryImages.length) % galleryImages.length)
+
+  const showNextImage = () =>
+    setCurrentImage((index) => (index + 1) % galleryImages.length)
+
+  const shareListing = async () => {
+    const url = window.location.href
+    const shareData = { title: listing?.title || 'Elan', url }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch {
+        /* istifadəçi imtina etdi */
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      alert(url)
+    }
   }
 
   const loadComments = async () => {
@@ -154,15 +221,55 @@ function ListingDetails() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
+      <nav className="mb-4 flex flex-wrap items-center gap-1 text-sm text-gray-500">
+        <Link to="/" className="hover:text-red-600">Ana səhifə</Link>
+        {listing.category && (
+          <>
+            <span>/</span>
+            <Link to={`/category/${categoryToSlug(listing.category)}`} className="hover:text-red-600">
+              {listing.category}
+            </Link>
+          </>
+        )}
+        <span>/</span>
+        <span className="truncate text-gray-700">{listing.title}</span>
+      </nav>
+
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
         <section className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
-          {activeImage ? (
-            <img src={activeImage} alt={listing.title} className="h-[360px] w-full object-cover md:h-[520px]" />
-          ) : (
-            <div className="flex h-[360px] items-center justify-center bg-gray-100 text-gray-400 md:h-[520px]">
-              Şəkil yoxdur
-            </div>
-          )}
+          <div className="relative">
+            {activeImage ? (
+              <img src={activeImage} alt={listing.title} className="h-[360px] w-full object-cover md:h-[520px]" />
+            ) : (
+              <div className="flex h-[360px] items-center justify-center bg-gray-100 text-gray-400 md:h-[520px]">
+                Şəkil yoxdur
+              </div>
+            )}
+
+            {galleryImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={showPrevImage}
+                  aria-label="Əvvəlki şəkil"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow hover:bg-white"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  type="button"
+                  onClick={showNextImage}
+                  aria-label="Növbəti şəkil"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow hover:bg-white"
+                >
+                  <ChevronRight size={22} />
+                </button>
+                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
+                  {currentImage + 1} / {galleryImages.length}
+                </span>
+              </>
+            )}
+          </div>
 
           {galleryImages.length > 1 && (
             <div className="flex gap-2 overflow-x-auto border-t border-gray-200 p-4">
@@ -189,6 +296,15 @@ function ListingDetails() {
               <p className="text-sm text-gray-500">{listing.category}</p>
               <h1 className="mt-1 text-3xl font-bold text-gray-950">{listing.title}</h1>
             </div>
+
+            <button
+              type="button"
+              onClick={shareListing}
+              aria-label="Paylaş"
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50"
+            >
+              {copied ? <Check size={18} className="text-green-600" /> : <Share2 size={18} />}
+            </button>
           </div>
 
           <p className="mt-4 text-3xl font-bold text-red-600">{formatPrice(listing.price)}</p>
@@ -199,13 +315,6 @@ function ListingDetails() {
               Baxış sayı: {listing.views || 0}
             </p>
 
-            {listing.phone && (
-              <p className="flex items-center gap-2">
-                <Phone size={18} />
-                {listing.phone}
-              </p>
-            )}
-
             {listing.city && (
               <p className="flex items-center gap-2">
                 <MapPin size={18} />
@@ -213,6 +322,29 @@ function ListingDetails() {
               </p>
             )}
           </div>
+
+          {listing.phone && (
+            <div className="mt-5">
+              {showPhone ? (
+                <a
+                  href={`tel:${listing.phone}`}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 font-semibold text-white hover:bg-green-700"
+                >
+                  <Phone size={18} />
+                  {listing.phone}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowPhone(true)}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-green-600 px-4 py-3 font-semibold text-green-700 hover:bg-green-50"
+                >
+                  <Phone size={18} />
+                  Nömrəni göstər
+                </button>
+              )}
+            </div>
+          )}
 
           <div className="mt-6 grid gap-2">
             <Link
@@ -284,6 +416,17 @@ function ListingDetails() {
           )}
         </div>
       </section>
+
+      {similarListings.length > 0 && (
+        <section className="mt-8">
+          <h2 className="mb-4 text-2xl font-bold text-gray-950">Oxşar elanlar</h2>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {similarListings.map((item) => (
+              <ListingCard key={item.id} item={item} currentUserId={currentUserId} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }

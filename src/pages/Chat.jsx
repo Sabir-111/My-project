@@ -103,6 +103,21 @@ function Chat() {
     )
   }, [currentUserId, messages, selectedUser])
 
+  const sortedUsers = useMemo(() => {
+    const lastMessageId = (userId) => {
+      let latest = 0
+      for (const msg of messages) {
+        const isConversation =
+          (msg.sender_id === currentUserId && msg.receiver_id === userId) ||
+          (msg.sender_id === userId && msg.receiver_id === currentUserId)
+        if (isConversation && msg.id > latest) latest = msg.id
+      }
+      return latest
+    }
+
+    return [...users].sort((first, second) => lastMessageId(second.id) - lastMessageId(first.id))
+  }, [users, messages, currentUserId])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: 'smooth',
@@ -263,7 +278,7 @@ function Chat() {
             {users.length === 0 ? (
               <p className="p-4 text-sm text-gray-400">Söhbət üçün istifadəçi tapılmadı.</p>
             ) : (
-              users.map((profile) => {
+              sortedUsers.map((profile) => {
                 const lastMessage = getLastMessage(profile.id)
                 const unreadCount = getUnreadCount(profile.id)
 
@@ -399,8 +414,11 @@ function Chat() {
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      sendMessage()
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                      event.preventDefault()
+                      if (!isSending && (message.trim() || file)) {
+                        sendMessage()
+                      }
                     }
                   }}
                   className="flex-1 rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -409,7 +427,7 @@ function Chat() {
                 <button
                   type="button"
                   onClick={sendMessage}
-                  disabled={isSending}
+                  disabled={isSending || (!message.trim() && !file)}
                   className="inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-3 font-semibold text-white hover:bg-red-700 disabled:bg-red-300"
                 >
                   <Send size={18} />

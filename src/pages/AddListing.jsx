@@ -106,10 +106,11 @@ function AddListing() {
       return
     }
 
-    try {
-      const uploadedImageUrls = []
+    const uploadedImageUrls = []
+    let uploadFailed = false
 
-      for (const image of images) {
+    for (const image of images) {
+      try {
         const imageUrl = await uploadPublicFile('images', image, `listings/${listingData.id}`)
         uploadedImageUrls.push(imageUrl)
 
@@ -119,25 +120,29 @@ function AddListing() {
             image_url: imageUrl,
           },
         ])
+      } catch {
+        uploadFailed = true
       }
-
-      if (uploadedImageUrls.length > 0) {
-        await supabase
-          .from('listings')
-          .update({
-            image: uploadedImageUrls[0],
-          })
-          .eq('id', listingData.id)
-      }
-
-      setForm(initialForm)
-      setImages([])
-      navigate(`/listing/${listingData.id}`)
-    } catch (uploadError) {
-      setErrorMessage(uploadError.message)
-    } finally {
-      setIsSubmitting(false)
     }
+
+    if (uploadedImageUrls.length > 0) {
+      await supabase
+        .from('listings')
+        .update({
+          image: uploadedImageUrls[0],
+        })
+        .eq('id', listingData.id)
+    }
+
+    setForm(initialForm)
+    setImages([])
+    setIsSubmitting(false)
+
+    if (uploadFailed) {
+      alert('Elan yaradıldı, lakin bəzi şəkillər yüklənmədi. Şəkilləri redaktədən yenidən əlavə edə bilərsiniz.')
+    }
+
+    navigate(`/listing/${listingData.id}`)
   }
 
   return (
