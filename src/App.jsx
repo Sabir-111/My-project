@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import { supabase } from './services/supabase'
 
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
 
 // Pages
@@ -90,6 +91,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <Footer />
     </div>
   )
 }
