@@ -5,6 +5,7 @@ import { supabase } from './services/supabase'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import PrivateRoute from './components/PrivateRoute'
 
 // Pages
 import Home from './pages/Home'
@@ -31,26 +32,36 @@ function App() {
     let mounted = true
 
     const init = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!mounted) return
-      setSession(session ?? null)
-      setAuthLoading(false)
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        if (!mounted) return
+        setSession(session ?? null)
+      } catch (err) {
+        console.error('Failed to get supabase session', err)
+        if (mounted) setSession(null)
+      } finally {
+        if (mounted) setAuthLoading(false)
+      }
     }
 
     init()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession ?? null)
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (mounted) setSession(nextSession ?? null)
     })
 
     return () => {
       mounted = false
-      subscription.unsubscribe()
+      try {
+        // unsubscribe if available
+        if (data?.subscription?.unsubscribe) {
+          data.subscription.unsubscribe()
+        }
+      } catch (e) {
+        // ignore
+      }
     }
   }, [])
 
@@ -75,18 +86,18 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/category/:slug" element={<Home />} />
         <Route path="/listing/:id" element={<ListingDetails />} />
-        <Route path="/add-listing" element={<AddListing />} />
-        <Route path="/edit/:id" element={<EditListing />} />
-        <Route path="/edit-listing/:id" element={<EditListing />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/inbox" element={<Inbox />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/chat/:receiverId" element={<Chat />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/add-listing" element={<PrivateRoute session={session}><AddListing /></PrivateRoute>} />
+        <Route path="/edit/:id" element={<PrivateRoute session={session}><EditListing /></PrivateRoute>} />
+        <Route path="/edit-listing/:id" element={<PrivateRoute session={session}><EditListing /></PrivateRoute>} />
+        <Route path="/favorites" element={<PrivateRoute session={session}><Favorites /></PrivateRoute>} />
+        <Route path="/inbox" element={<PrivateRoute session={session}><Inbox /></PrivateRoute>} />
+        <Route path="/chat" element={<PrivateRoute session={session}><Chat /></PrivateRoute>} />
+        <Route path="/chat/:receiverId" element={<PrivateRoute session={session}><Chat /></PrivateRoute>} />
+        <Route path="/notifications" element={<PrivateRoute session={session}><Notifications /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute session={session}><Profile /></PrivateRoute>} />
         <Route path="/user/:id" element={<UserProfile />} />
-        <Route path="/my-listings" element={<MyListings />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/my-listings" element={<PrivateRoute session={session}><MyListings /></PrivateRoute>} />
+        <Route path="/admin" element={<PrivateRoute session={session}><Admin /></PrivateRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />

@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL || 'https://cpkmeqwqftixwzilglgz.supabase.co'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-const supabaseKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  'sb_publishable_O6vWj7-MrjPwHyg4GtepXw_v_rzc3qR'
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.warn('VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is not set.')
+}
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
