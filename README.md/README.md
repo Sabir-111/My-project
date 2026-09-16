@@ -12,6 +12,7 @@
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![React Router](https://img.shields.io/badge/React_Router-7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)](https://reactrouter.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 <br>
@@ -19,11 +20,6 @@
 **A modern, responsive and scalable classifieds marketplace built for Azerbaijan.**
 
 <br>
-
-<!-- Add your live website URL here -->
-<a href="https://YOUR-LIVE-DEMO-URL.com">
-  <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Elan.az-E53935?style=for-the-badge" alt="Live Demo">
-</a>
 
 <a href="https://github.com/Sabir-111/My-project">
   <img src="https://img.shields.io/badge/💻_Source_Code-GitHub-181717?style=for-the-badge&logo=github" alt="GitHub">
@@ -39,14 +35,15 @@
 users in Azerbaijan.
 
 The platform allows users to discover, search, publish and manage listings
-through a clean and responsive interface.
+through a clean, modern and responsive interface.
 
-The project also includes a dedicated **administration dashboard** with
-user management, listing management, reports, payments, analytics,
-audit logs, support tools and administrative controls.
+The project includes a dedicated administration dashboard with tools for
+user management, listing management, categories, reports, payments,
+analytics, audit logs, support, messaging and administrative controls.
 
-The architecture is designed to support intelligent marketplace features
-and future AI-powered functionality.
+The architecture is designed to support scalable marketplace functionality,
+secure authentication, database management, monetization and future
+AI-powered marketplace features.
 
 ---
 
@@ -60,6 +57,7 @@ where people can:
 - 👤 Manage their own listings
 - ❤️ Save interesting listings
 - 💬 Communicate with sellers
+- 🔔 Receive notifications
 - ⭐ Promote listings
 - 📊 Track marketplace activity
 - 🛡️ Use a secure and manageable platform
@@ -79,6 +77,8 @@ where people can:
 - Seller information
 - Listing statistics
 - Modern marketplace UI
+- Responsive desktop interface
+- Responsive mobile interface
 
 ---
 
@@ -108,23 +108,45 @@ listings quickly.
 
 # 👤 User System
 
-The platform includes a user account system.
+The platform includes a complete user account system.
 
 ### Users can:
 
 - Register
 - Sign in
+- Log in
 - Manage their profile
 - Publish listings
 - Edit listings
-- Delete/manage listings
+- Delete listings
+- Manage their advertisements
 - View their advertisements
 - Save favorites
 - Send messages
 - Receive messages
+- View notifications
 - Manage account activity
 
 Authentication and backend functionality are powered by Supabase.
+
+---
+
+# 📢 Advertisement Management
+
+Users can create and manage their own advertisements.
+
+### Listing functionality includes:
+
+- Create advertisements
+- Add listing information
+- Add images
+- Select categories
+- Select location
+- Edit advertisements
+- Delete advertisements
+- View personal advertisements
+- Manage listing information
+- Manage listing visibility
 
 ---
 
@@ -147,7 +169,22 @@ Elan.az includes an internal messaging interface.
 - Conversations
 - User-to-user communication
 - Message management
+- Conversation management
 - Administrative message management
+
+---
+
+# 🔔 Notifications
+
+The platform includes a notification interface.
+
+Notifications can be used for:
+
+- New messages
+- Listing activity
+- Account activity
+- Marketplace events
+- Administrative notifications
 
 ---
 
@@ -163,6 +200,9 @@ VIP listings can receive additional visibility within the marketplace.
 
 Premium functionality is designed for users who want additional
 promotion opportunities for their advertisements.
+
+Production payment processing should be connected to a secure payment
+provider before real transactions are enabled.
 
 ---
 
@@ -222,6 +262,7 @@ The system is designed to support:
 - User activity monitoring
 - Administrative actions
 - Role-based access
+- Account status management
 
 ---
 
@@ -234,9 +275,17 @@ Management functionality includes:
 - Listing review
 - Listing moderation
 - Listing management
-- VIP/Premium management
+- VIP management
+- Premium management
 - Report handling
 - Listing activity monitoring
+
+---
+
+# 🗂️ Category Management
+
+Administrators can manage marketplace categories and organize listings
+according to the platform structure.
 
 ---
 
@@ -252,7 +301,7 @@ This provides an additional layer of marketplace moderation.
 
 # 💳 Payment Management
 
-The admin dashboard contains a dedicated payment management section.
+The administration panel contains a dedicated payment management section.
 
 This section is intended to support monetization features such as:
 
@@ -355,6 +404,7 @@ intelligent tools.
 - ✍️ Listing assistance
 - 📊 Marketplace insights
 - 🛡️ Automated moderation assistance
+- 🚨 Fraud detection assistance
 
 > AI features should only be considered fully implemented when the
 > corresponding backend services and models are connected and operational.
@@ -363,10 +413,20 @@ intelligent tools.
 
 # 🖼️ Screenshots
 
+All project screenshots are stored inside the `screenshots/` directory.
+
 ## 🏠 Marketplace Homepage
 
 <p align="center">
-  <img src="screenshots/home.png" alt="Elan.az Homepage" width="100%">
+  <img src="./screenshots/home.png" alt="Elan.az Homepage" width="100%">
+</p>
+
+---
+
+## 📢 Add an Advertisement
+
+<p align="center">
+  <img src="./screenshots/Add%20an%20ad.png" alt="Add an Advertisement" width="100%">
 </p>
 
 ---
@@ -374,18 +434,64 @@ intelligent tools.
 ## 🛡️ Admin Dashboard
 
 <p align="center">
-  <img src="screenshots/admin-dashboard.png" alt="Elan.az Admin Dashboard" width="100%">
+  <img src="./screenshots/Admin%20Dashboard.png" alt="Elan.az Admin Dashboard" width="100%">
 </p>
 
 ---
 
-## 📱 Mobile Interface
+## 📋 My Listings
 
 <p align="center">
-  <img src="screenshots/mobile.png" alt="Elan.az Mobile Interface" width="350">
+  <img src="./screenshots/My%20listings.png" alt="My Listings" width="100%">
 </p>
 
-> Add the mobile screenshot when available.
+---
+
+## ❤️ Favorites
+
+<p align="center">
+  <img src="./screenshots/favorites.png" alt="Favorites" width="100%">
+</p>
+
+---
+
+## 💬 Inbox
+
+<p align="center">
+  <img src="./screenshots/Inbox.png" alt="Inbox" width="100%">
+</p>
+
+---
+
+## 🔔 Notifications
+
+<p align="center">
+  <img src="./screenshots/Notifications.png" alt="Notifications" width="100%">
+</p>
+
+---
+
+## 👤 Profile
+
+<p align="center">
+  <img src="./screenshots/Profile.png" alt="Profile" width="100%">
+</p>
+
+---
+
+## 🔐 Login
+
+<p align="center">
+  <img src="./screenshots/Login.png" alt="Login" width="100%">
+</p>
+
+---
+
+## 🔑 Sign In
+
+<p align="center">
+  <img src="./screenshots/Sign%20in.png" alt="Sign In" width="100%">
+</p>
 
 ---
 
@@ -401,6 +507,7 @@ The interface focuses on:
 - Fast interaction
 - Accessible controls
 - Consistent visual language
+- Modern marketplace experience
 
 The platform is designed to provide a familiar experience for both
 desktop and mobile users.
@@ -440,7 +547,7 @@ Elan.az is designed to support:
 | 🟢 Supabase | Backend platform |
 | 🔐 Supabase Auth | Authentication |
 | 🗄️ Supabase Database | Data storage |
-| 📦 Supabase Storage | File/image storage |
+| 📦 Supabase Storage | File and image storage |
 
 ## Development
 
@@ -457,7 +564,7 @@ Elan.az is designed to support:
 The project uses a modern frontend architecture based on React and Vite,
 with Supabase providing backend services.
 
-### Frontend
+## Frontend
 
 Responsible for:
 
@@ -467,11 +574,13 @@ Responsible for:
 - Authentication interfaces
 - Listings
 - Profiles
+- Favorites
 - Messaging
+- Notifications
 - Admin dashboard
 - User interactions
 
-### Backend
+## Backend
 
 Supabase is used for:
 
@@ -488,34 +597,33 @@ Supabase is used for:
 ```text
 My-project/
 │
-├── public/
-│
 ├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── contexts/
-│   ├── hooks/
-│   ├── layouts/
-│   ├── lib/
-│   ├── pages/
-│   ├── services/
-│   └── ...
 │
 ├── screenshots/
-│   ├── home.png
-│   ├── admin-dashboard.png
-│   └── mobile.png
+│   ├── Add an ad.png
+│   ├── Admin Dashboard.png
+│   ├── Inbox.png
+│   ├── Login.png
+│   ├── My listings.png
+│   ├── Notifications.png
+│   ├── Profile.png
+│   ├── Sign in.png
+│   ├── favorites.png
+│   └── home.png
 │
 ├── .env.example
 ├── .gitignore
+├── eslint.config.js
 ├── index.html
 ├── package.json
+├── package-lock.json
+├── postcss.config.js
 ├── tailwind.config.js
 ├── vite.config.js
 └── README.md
 ```
 
-> The exact structure may evolve as the project develops.
+> The exact source structure may evolve as the project develops.
 
 ---
 
@@ -531,7 +639,7 @@ Before running the project, make sure you have:
 
 ---
 
-## 1️⃣ Clone the repository
+## 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/Sabir-111/My-project.git
@@ -539,7 +647,7 @@ git clone https://github.com/Sabir-111/My-project.git
 
 ---
 
-## 2️⃣ Open the project
+## 2️⃣ Open the Project
 
 ```bash
 cd My-project
@@ -547,7 +655,7 @@ cd My-project
 
 ---
 
-## 3️⃣ Install dependencies
+## 3️⃣ Install Dependencies
 
 ```bash
 npm install
@@ -570,7 +678,7 @@ Replace the placeholder values with your own Supabase project credentials.
 
 ---
 
-## 5️⃣ Start the development server
+## 5️⃣ Start the Development Server
 
 ```bash
 npm run dev
@@ -592,19 +700,36 @@ npm run build
 
 # 🔍 Preview Production Build
 
+Preview the production build locally:
+
 ```bash
 npm run preview
 ```
 
 ---
 
-# 🔐 Security
+# 🔐 Environment Variables
+
+Create a `.env` file locally based on `.env.example`.
+
+Example:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Never commit private API keys or sensitive credentials to the repository.
+
+---
+
+# 🛡️ Security
 
 Security is an important part of a marketplace application.
 
-Never commit sensitive credentials to GitHub.
+Never expose sensitive credentials.
 
-### Never expose:
+### Never commit:
 
 ```text
 SUPABASE_SERVICE_ROLE_KEY
@@ -617,13 +742,6 @@ SMTP_PASSWORD
 
 Only use environment variables that are safe for the browser with the
 appropriate `VITE_` prefix.
-
-### Example:
-
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
 
 > Never place a Supabase `service_role` key in frontend code or in a
 > public GitHub repository.
@@ -683,6 +801,7 @@ payment provider before accepting real payments.
 - [x] User profiles
 - [x] Favorites
 - [x] Messaging interface
+- [x] Notifications interface
 
 ## 🟡 Marketplace
 
@@ -734,14 +853,14 @@ payment provider before accepting real payments.
 
 Elan.az is currently under active development.
 
-The platform's interface, backend architecture, marketplace functionality
-and AI-related features may continue to evolve.
+The platform's interface, backend architecture, marketplace functionality,
+administration system and AI-related features may continue to evolve.
 
 ---
 
 # 🌐 Live Demo
 
-> Replace the URL below with your real production website once deployed.
+Replace the URL below with your real production website once deployed.
 
 ```text
 https://YOUR-LIVE-DEMO-URL.com
@@ -767,7 +886,7 @@ Coming soon.
 
 Developer and creator of the Elan.az marketplace project.
 
-GitHub:
+### GitHub
 
 https://github.com/Sabir-111
 
